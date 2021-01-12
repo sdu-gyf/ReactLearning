@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-12 22:39:34
+ * @LastEditTime: 2021-01-12 23:36:55
 -->
 ## React 学习前置知识
 
@@ -23,6 +23,7 @@
 - node: 14.15.4 LTS (飞冰官方建议node版本10.x版本或以上，我索性就用目前(2021.1.12)当前最新的LTS版本)
 - yarn: 1.22.10
 - icejs: 1.14.0
+- build-plugin-fusion: 0.1.9
 - 其他另见 `./react-demo/package.json`
 > 官方建议使用 `nvm` 管理 `node` 版本，但由于我之前接触过 `n` ，所以这里我直接使用了 `n` 作为版本管理工具，如果二者你都没接触过，那么建议使用官方推荐的 `nvm` ，你可以点击[此处](https://cloud.tencent.com/developer/article/1674774)查看二者区别。
 
@@ -132,5 +133,69 @@
         },
     ];
     ```
-    这里值得说明的是: `/learing` 路由和 `/` 路由是有先后顺序的。
+    这里值得说明的是: `/learning` 路由和 `/` 路由是有先后顺序的。
     > 注意：路由有一个按顺序匹配的规则，**从上到下**一旦**命中路由匹配规则**就会**停止遍历**，因此如果你在最前面配置了 `/` 这样一个路由，则所有的路由都会命中该规则，导致其他路由没有效果，所以在开发时要注意路由的顺序以及 `exact` 属性的使用。(飞冰文档)
+
+    配置到这里，如果你去访问 `/learning/Jsx` 的话，你会惊奇发发现报错，这是因为在父节点中我们还需要写一个layout。(此处鸣谢 lhc 学长帮我指出错误!)
+
+    这里的内部逻辑是判断是否有 children ，再去决定是否拿 layout 组件去渲染。具体源码如下，也可点击[此处](https://github.com/alibaba/ice/blob/d744f818a151fa5a24efbdd9d58603b23951e120/packages/plugin-router/src/runtime/Router.tsx#L76)查看
+    ```Typescript
+    function Routes({ routes, fallback }: RoutesProps) {
+        return (
+            <Switch>
+            {routes.map((route, id) => {
+                const { children } = route;
+
+                if (!children) {
+                    if (route.redirect) {
+                        const { redirect, ...others } = route;
+                        return <Redirect key={id} from={route.path} to={redirect} {...others} />;
+                    } else {
+                        const { component: RouteComponent, ...others } = route;
+                        // React does not currently support Suspense when components are being server-side rendered
+                        // process.env.__IS_SERVER__: React.RenderToString()
+                        // window.__ICE_SSR_ENABLED__: React.hydrate()
+                        const RenderComponent = process.env.__IS_SERVER__ || (window as any).__ICE_SSR_ENABLED__
+                        ? (props: RouteComponentProps) => <RouteComponent {...props} />
+                        : (props: RouteComponentProps) => {
+                            return (
+                            <React.Suspense fallback={fallback || <div>loading</div>}>
+                                <RouteComponent {...props} />
+                            </React.Suspense>
+                            );
+                        };
+
+                        return (
+                        <Route
+                            key={id}
+                            {...others}
+                            render={RenderComponent}
+                        />
+                        );
+                    }
+                    } else {
+                    const { component: LayoutComponent, children, ...others } = route;
+                    const RenderComponent = (props: RouteComponentProps) => (
+                        <LayoutComponent {...props}>
+                        <Routes routes={children} fallback={fallback} />
+                        </LayoutComponent>
+                    );
+                    return (
+                        <Route
+                        key={id}
+                        {...others}
+                        render={RenderComponent}
+                        />
+                    );
+                }
+            })}
+            </Switch>
+        );
+    }
+    ```
+
+    所以，我们正好使用 `@alifd/next` 写一个 layout 作为不同页面之间的跳转
+
+4. 安装 `Fusion` ,并配置按需加载
+
+    `yarn add build-plugin-fusion --save`
