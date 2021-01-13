@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-13 21:44:42
+ * @LastEditTime: 2021-01-13 22:10:27
  * @LastEditTime: 2021-01-13 20:55:54
 -->
 ## React 学习前置知识
@@ -460,3 +460,35 @@
     ![render效果](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-13/rhtgwO-21-38-G3k8Hq.png)
     
     
+### React 基础组件
+组件我们在之前的步骤中已经创建过很多个了，创建组件主要有两种方式，一种是使用类创建，一种是使用 `Hooks` 创建，这里只介绍使用类创建
+
+使用类创建和我们之前创建组件的方式不太一样，主要是飞冰给我们封装了一下，在飞冰中的写法是这样的
+```ts
+import * as React from 'react';
+
+const MyComponent = () => {
+    return(
+        <div>
+            Hello MyComponent
+        </div>
+    );
+};
+
+// 导出 Jsx
+export default MyComponent;
+```
+而完整的写法是这样的
+```ts
+import React from 'react';
+
+class MyComponent extends React.Component {
+    render() {
+        return (
+            <div>Hello ComponentLearning</div>
+        )
+    }
+}
+export default MyComponent;
+```
+另外这里贴一个之前逛 Github Trending 的时候看到的开源项目，做了很多的 React Hooks ,[链接](https://github.com/streamich/react-use),还有中文文档，有兴趣的可以了解下。
