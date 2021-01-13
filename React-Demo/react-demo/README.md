@@ -5,6 +5,7 @@
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
  * @LastEditTime: 2021-01-13 20:25:44
+ * @LastEditTime: 2021-01-13 20:55:54
 -->
 ## React 学习前置知识
 
@@ -18,7 +19,7 @@
     - [飞冰框架文档](https://ice.work/docs/guide/about)
 
 ## 版本说明
-*为了**尽可能**减少复现难度，我会**尽可能**把所有使用到的工具/框架/依赖的版本号写明，如果你发现某个工具的版本文档中找不到，并且 `package.json` 中也没有，欢迎给我提 issue ,我会尽快补充* 
+*为了**尽可能**减少复现难度，我会**尽可能**把所有使用到的工具/框架/依赖的版本号写明，如果你发现某个工具的版本文档中找不到，并且 `package.json` 中也没有，欢迎给我提 issue ,我会尽快补充，除此之外，我尽量学习每一个部分是新开一个branch，这样可以让你方便地查看我每次的操作，当然如果你只想看 `main` ,分支也没有问题，我会在每一部分学习结束之后把新的 `branch` 给 `merge` 到 `main` 分支上去* 
 - System: macOS Big Sur 11.1
 - node: 14.15.4 LTS (飞冰官方建议node版本10.x版本或以上，我索性就用目前(2021.1.12)当前最新的LTS版本)
 - yarn: 1.22.10
@@ -80,7 +81,10 @@
 为了保证每一章的内容都可复现，这里直接应该配置 `routes` 以对应不同的章节，但是飞冰已经帮我们做好了这一步。
 > [路由配置](https://ice.work/docs/guide/basic/router)
 
+这里开始 `basicLayout` 分支的内容
+
 那我们首先配置 JSX 界面的路由。
+
 
 *由于是第一次建立路由，这里会写详细配置，等下一次再需要新建路由时，会直接简写为 **“新建xxx的路由”** ，如无特殊说明则基本步骤相同，文件初始化内容每次都会附上。*
 1. 首先在 `src/components` 目录下新建文件夹 `Jsx` 并新建一个入口文件 `index.tsx`，内容作简单初始化。
@@ -218,7 +222,7 @@
 
     export default AsideMenuConfig;
     ```
-7. 在 `BasicLayout/` 下新建 `components/PageNav/index.tsx` ,这里由于我们不需要做权限管理，所以不需要 `auth` 参数，对飞冰模板 `Fusion Design Pro TypeScript template.` 进行简单修改，或者直接参照(文档)[https://ice.work/docs/guide/basic/menu]说明编写:
+7. 在 `BasicLayout/` 下新建 `components/PageNav/index.tsx` ,这里由于我们不需要做权限管理，所以不需要 `auth` 参数，对飞冰模板 `Fusion Design Pro TypeScript template.` 进行简单修改，或者直接参照[文档](https://ice.work/docs/guide/basic/menu)说明编写:
     ```Typescript
     import React, { useEffect, useState } from 'react';
     import PropTypes from 'prop-types';
@@ -370,4 +374,32 @@
 
 10. 运行项目 并手动跳转到 `/learning/Jsx` ,即可看到效果如下
     ![运行效果图](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-13/Eqp56z-20-24-ncecNp.png)
+
+这里开始 `basicLayout` 分支结束，开始 `Jsx` 分支。
+
+11. Jsx 语法学习，其实这里使用 `飞冰` 框架并不直观，我们可以看 `src/app.tsx` 文件中。
+    ```Typescript
+    import { runApp, IAppConfig } from 'ice';
+
+    const appConfig: IAppConfig = {
+        app: {
+            rootId: 'ice-container',
+        },
+    };
+
+    runApp(appConfig);
+    ```
+    这里的写法和原版脚手架是不一样的，原版的写法是
+    ```ts
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    import App from './app';
+    // 这里为了统一性我把 root 写为 ice-container , 这里对应实际的id，即 public/index.html 中的容器 div 的id
+    ReactDOM.render(<App />, document.getElementById('ice-container'))
+    ```
+    这里我们以原版分析更好理解，这里的 `<App />` 就是一个组件，我们如果把它写为
+    ```ts
+    ReactDOM.render(<H1>Hello React</H1>, document.getElementById('ice-container'))
+    ```
+    实际上也能在页面上渲染出 `Hello React` ,你会发现我们在这句代码中我们同时使用到了标签和 `js` 语法，这个有趣的标签语法既不是字符串也不是 HTML。它被称为 JSX，是一个 JavaScript 的语法扩展。我们建议在 React 中配合使用 JSX，JSX 可以很好地描述 UI 应该呈现出它应有交互的本质形式。JSX 可能会使人联想到模版语言，但它具有 JavaScript 的全部功能。在 [React文档](https://zh-hans.reactjs.org/docs/introducing-jsx.html)中有着对 Jsx 简单的介绍,如果你想了解关于Jsx更多的内容，可以点击[这里](https://zh-hans.reactjs.org/docs/jsx-in-depth.html)。
 
