@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-13 20:25:44
+ * @LastEditTime: 2021-01-13 20:28:46
 -->
 ## React 学习前置知识
 
@@ -218,7 +218,7 @@
 
     export default AsideMenuConfig;
     ```
-7. 在 `BasicLayout/` 下新建 `components/PageNav/index.tsx` ,这里由于我们不需要做权限管理，所以不需要 `auth` 参数，对飞冰模板 `Fusion Design Pro TypeScript template.` 进行简单修改，或者直接参照(文档)[https://ice.work/docs/guide/basic/menu]说明编写:
+7. 在 `BasicLayout/` 下新建 `components/PageNav/index.tsx` ,这里由于我们不需要做权限管理，所以不需要 `auth` 参数，对飞冰模板 `Fusion Design Pro TypeScript template.` 进行简单修改，或者直接参照[文档](https://ice.work/docs/guide/basic/menu)说明编写:
     ```Typescript
     import React, { useEffect, useState } from 'react';
     import PropTypes from 'prop-types';
