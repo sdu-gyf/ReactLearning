@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-13 20:09:11
+ * @LastEditTime: 2021-01-13 21:12:36
  */
 
 const AsideMenuConfig = [
@@ -16,6 +16,10 @@ const AsideMenuConfig = [
                 name: 'Jsx学习',
                 path: '/learning/Jsx'
             },
+            {
+                name: 'Render学习',
+                path: '/learning/render'
+            }
         ],
     },
 ]
