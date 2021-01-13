@@ -3,15 +3,17 @@
  * @version: 
  * @Date: 2021-01-12 21:22:08
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-12 22:31:50
+ * @LastEditTime: 2021-01-13 20:07:52
  */
 import Home from '@/pages/Home';
 import JsxLearning from '@/pages/Learning/JsxLearning';
+import BasicLayout from '@/layouts/BasicLayout';
 
 const routerConfig = [
   {
     // 创建父节点 /learning
     path: '/learning',
+    component: BasicLayout,
     // 子节点
     children: [
       {

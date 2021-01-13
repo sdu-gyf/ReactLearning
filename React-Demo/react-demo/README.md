@@ -4,11 +4,11 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-12 23:36:55
+ * @LastEditTime: 2021-01-13 20:25:44
 -->
 ## React 学习前置知识
 
-原教程使用了 `React` 官方脚手架，我会在学习过程中改为 `飞冰` 框架，并尽量把配置不同的步骤详细地记录下来。
+原教程使用了 `React` 官方脚手架和 `antd`，我会在学习过程中改为 `飞冰` 框架和 `Fusion` ，并尽量把配置不同的步骤详细地记录下来。
 1. JavaScript
 2. HTML+CSS
 3. Webpack 
@@ -76,7 +76,7 @@
 ```
 
 ## React 基础知识
-### JSX 语法
+### JSX 语法 && BasicLayout 编写
 为了保证每一章的内容都可复现，这里直接应该配置 `routes` 以对应不同的章节，但是飞冰已经帮我们做好了这一步。
 > [路由配置](https://ice.work/docs/guide/basic/router)
 
@@ -194,8 +194,180 @@
     }
     ```
 
-    所以，我们正好使用 `@alifd/next` 写一个 layout 作为不同页面之间的跳转
+    所以，我们正好使用 `Fusion` 写一个 layout 作为不同页面之间的跳转
 
-4. 安装 `Fusion` ,并配置按需加载
+4. 安装 `Fusion`
 
     `yarn add build-plugin-fusion --save`
+5. 在 `src/` 下新建 `layouts/BasicLayout/` ,并新建 `index.tsx` 和 `menuConfig.ts` 文件。
+
+6. 编写 `menuConfig.ts` 文件
+    ```Typescript
+    const AsideMenuConfig = [
+        {
+            name: '学习页面',
+            path: '/learning',
+            children: [
+                {
+                    name: 'Jsx学习',
+                    path: '/learning/Jsx'
+                },
+            ],
+        },
+    ]
+
+    export default AsideMenuConfig;
+    ```
+7. 在 `BasicLayout/` 下新建 `components/PageNav/index.tsx` ,这里由于我们不需要做权限管理，所以不需要 `auth` 参数，对飞冰模板 `Fusion Design Pro TypeScript template.` 进行简单修改，或者直接参照(文档)[https://ice.work/docs/guide/basic/menu]说明编写:
+    ```Typescript
+    import React, { useEffect, useState } from 'react';
+    import PropTypes from 'prop-types';
+    import { Link, withRouter } from 'ice';
+    import { Nav } from '@alifd/next';
+    import  AsideMenuConfig  from '../../menuConfig';
+
+    const { SubNav } = Nav;
+    const NavItem = Nav.Item;
+
+    export interface IMenuItem {
+        name: string;
+        path: string;
+        icon?: string;
+        children?: IMenuItem[];
+    }
+
+
+    function getNavMenuItem(menusData: any[], initIndex?: number | string) {
+        if(!menusData) {
+            return [];
+        }
+
+        return menusData
+            .filter(item => item.name && !item.hideInMenu)
+            .map((item, index) => {
+                return getSubMenuOrItem(item, `${initIndex}-${index}`);
+            });
+    }
+
+    function getSubMenuOrItem(item: IMenuItem, index?: number | string) {
+        if (item.children && item.children.some(child => child.name)) {
+            const childrenItems = getNavMenuItem(item.children, index);
+            if (childrenItems && childrenItems.length > 0) {
+                const subNav = (
+                    <SubNav
+                        key={item.name}
+                        label={item.name}
+                    >
+                        {childrenItems}
+                    </SubNav>
+                );
+                return subNav;
+            }
+            return null;
+        }
+        const navItem = (
+            <NavItem key={item.name}>
+                <Link to={item.path}>
+                    {item.name}
+                </Link>
+            </NavItem>
+        );
+        return navItem;
+    }
+
+    const Navigation = (props, context) => {
+        const [openKeys, setOpenKeys] = useState<string[]>([]);
+        
+        const { location } = props;
+        const { pathname } = location;
+        const { isCollapse } = context;
+
+        useEffect(() => {
+            const curSubNav = AsideMenuConfig.find((menuConfig) => {
+                return menuConfig.children && checkChildPathExists(menuConfig);
+            });
+            
+            function checkChildPathExists(menuConfig) {
+                return menuConfig.children.some(child => {
+                    return child.children ? checkChildPathExists(child) : child.path === pathname;
+                });
+            }
+            if (curSubNav && !openKeys.includes(curSubNav.name)) {
+                setOpenKeys([...openKeys, curSubNav.name]);
+            }
+        }, [pathname]);
+
+        return (
+            <Nav
+                type="normal"
+                openKeys={openKeys}
+                selectedKeys={[pathname]}
+                defaultSelectedKeys={[pathname]}
+                embeddable
+                activeDirection="right"
+                hasArrow={false}
+                mode={isCollapse ? 'popup' : 'inline'}
+                onOpen={setOpenKeys}
+            >
+                {getNavMenuItem(AsideMenuConfig, 0)}
+            </Nav>
+        );
+    };
+
+    Navigation.contextTypes = {
+        isCollapse: PropTypes.bool,
+    };
+
+    const PageNav = withRouter(Navigation);
+
+    export default PageNav;
+    ```
+
+8. 编写 `BasicLayout/index.tsx` 
+    ```Typescript
+    import React from 'react';
+    import { Shell, ConfigProvider } from '@alifd/next';
+    import PageNav from './components/PageNav';
+
+    export default function BasicLayout({
+        children,
+    }:{
+        children: React.ReactNode;
+    }) {
+        return (
+            <ConfigProvider>
+                <Shell
+                    style={{
+                        minHeight: '100vh',
+                    }}
+                    type="brand"
+                    fixedHeader={false}
+                >
+                    <Shell.Navigation>
+                        <PageNav />
+                    </Shell.Navigation>
+                    <Shell.Content>{children}</Shell.Content>
+                </Shell>
+            </ConfigProvider>
+        )
+    }
+    ```
+
+9. 修改 `src/routes.ts` 
+    ```Typescript
+        import JsxLearning from '@/pages/Learning/JsxLearning';
+    +   import BasicLayout from '@/layouts/BasicLayout';
+
+        const routerConfig = [
+        {
+            // 创建父节点 /learning
+            path: '/learning',
+    +       component: BasicLayout,
+            // 子节点
+            children: [
+            {
+    ```
+
+10. 运行项目 并手动跳转到 `/learning/Jsx` ,即可看到效果如下
+    ![运行效果图](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-13/Eqp56z-20-24-ncecNp.png)
+
