@@ -3,11 +3,12 @@
  * @version: 
  * @Date: 2021-01-12 21:22:08
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-13 20:07:52
+ * @LastEditTime: 2021-01-13 21:12:28
  */
 import Home from '@/pages/Home';
-import JsxLearning from '@/pages/Learning/JsxLearning';
 import BasicLayout from '@/layouts/BasicLayout';
+import JsxLearning from '@/pages/Learning/JsxLearning';
+import RenderLearning from '@/pages/Learning/Render'
 
 const routerConfig = [
   {
@@ -23,6 +24,11 @@ const routerConfig = [
         exact: true,
         // 路由组件
         component: JsxLearning,
+      },
+      {
+        path: '/render',
+        exact: true,
+        component: RenderLearning,
       }
     ]
   },

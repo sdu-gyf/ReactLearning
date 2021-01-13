@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-13 20:25:44
+ * @LastEditTime: 2021-01-13 21:44:42
  * @LastEditTime: 2021-01-13 20:55:54
 -->
 ## React 学习前置知识
@@ -86,7 +86,7 @@
 那我们首先配置 JSX 界面的路由。
 
 
-*由于是第一次建立路由，这里会写详细配置，等下一次再需要新建路由时，会直接简写为 **“新建xxx的路由”** ，如无特殊说明则基本步骤相同，文件初始化内容每次都会附上。*
+*由于是第一次建立路由，这里会写详细配置，等下一次再需要新建路由时，会直接简写为 **“新建xxx的路由”** ，如无特殊说明则基本步骤相同。*
 1. 首先在 `src/components` 目录下新建文件夹 `Jsx` 并新建一个入口文件 `index.tsx`，内容作简单初始化。
     ```Typescript
     // 引入 React 核心模块
@@ -403,3 +403,60 @@
     ```
     实际上也能在页面上渲染出 `Hello React` ,你会发现我们在这句代码中我们同时使用到了标签和 `js` 语法，这个有趣的标签语法既不是字符串也不是 HTML。它被称为 JSX，是一个 JavaScript 的语法扩展。我们建议在 React 中配合使用 JSX，JSX 可以很好地描述 UI 应该呈现出它应有交互的本质形式。JSX 可能会使人联想到模版语言，但它具有 JavaScript 的全部功能。在 [React文档](https://zh-hans.reactjs.org/docs/introducing-jsx.html)中有着对 Jsx 简单的介绍,如果你想了解关于Jsx更多的内容，可以点击[这里](https://zh-hans.reactjs.org/docs/jsx-in-depth.html)。
 
+### React 渲染 
+*绝了 这里吐槽下 不知道是飞冰的问题还是react本身的问题 一模一样的代码 第一遍写报错 重写一遍就正常 太离谱了 浪费了我半个小时的时间。*
+1. 按照前面的步骤新建 `component` 和 `page` ,并修改 `menuConfig.ts` 和 `routes.ts` 。
+
+2. 新建 `Render/renderTime.tsx` 
+    ```ts
+    import * as React from 'react';
+    import ReactDOM from 'react-dom';
+
+    const RenderTime = () => {
+
+        function tick() {
+            // 如果一个标签需要换行，需要()包裹住
+            const element = (
+                <div>
+                    <h2>It is { new Date().toLocaleTimeString() }</h2>
+                </div>
+            )
+            if (!document.getElementById('renderTime')) {
+                console.log('未找到dom')
+            } else {
+                // 找到页面中 id 为 renderTime 的dom元素进行渲染
+                ReactDOM.render(element, document.getElementById('renderTime'));
+            }
+        }
+        // 每秒触发一次
+        setInterval(tick, 1000);
+        // 要有个返回值，不然会报错，但是实际上这个 <div> 并不能渲染出来，原因是上面的 ReactDOM.render 已经强制渲染了
+        return <div></div>;
+    };
+    // 导出 Jsx
+    export default RenderTime;
+    ```
+3. 在 `Render/index.tsx` 中作修改
+    ```ts
+    import * as React from 'react';
+    import RenderTime from './renderTime';
+
+    const Render = () => {
+
+        return(
+            <div>
+                <div>这是学习render</div>
+                <div id='renderTime'>
+                    <RenderTime />
+                </div>
+            </div>
+        );
+    };
+    // 导出 Jsx
+    export default Render;
+    ```
+
+    至此我们就可以在页面上看到效果了
+    ![render效果](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-13/rhtgwO-21-38-G3k8Hq.png)
+    
+    
