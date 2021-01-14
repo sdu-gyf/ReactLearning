@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-14 21:00:12
+ * @LastEditTime: 2021-01-14 22:04:06
  */
 
 const AsideMenuConfig = [
@@ -31,6 +31,10 @@ const AsideMenuConfig = [
             {
                 name: 'State学习',
                 path: '/learning/state'
+            },
+            {
+                name: 'Life学习',
+                path: '/learning/life'
             }
         ],
     },
