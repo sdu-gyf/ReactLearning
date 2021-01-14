@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-13 22:00:02
+ * @LastEditTime: 2021-01-14 20:13:19
  */
 
 const AsideMenuConfig = [
@@ -23,6 +23,10 @@ const AsideMenuConfig = [
             {
                 name: 'Component学习',
                 path: '/learning/component'
+            },
+            {
+                name: 'Props学习',
+                path: '/learning/props'
             }
         ],
     },
