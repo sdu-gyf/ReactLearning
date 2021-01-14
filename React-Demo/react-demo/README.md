@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-13 22:10:27
+ * @LastEditTime: 2021-01-14 20:51:45
  * @LastEditTime: 2021-01-13 20:55:54
 -->
 ## React 学习前置知识
@@ -492,3 +492,61 @@ class MyComponent extends React.Component {
 export default MyComponent;
 ```
 另外这里贴一个之前逛 Github Trending 的时候看到的开源项目，做了很多的 React Hooks ,[链接](https://github.com/streamich/react-use),还有中文文档，有兴趣的可以了解下。
+
+### Prop
+上一章我们写到了 component，但是目前为止我们每个页面都差不多，并且大体结构都一样，我们每次都重写了内容，这其实很不符合 `React` 组件可复用的理念，之前我都是故意这么写的，这一章节我会使用 props 这个概念对之前对代码进行重构。
+
+首先什么是 `Props` ，我们还是以代码为例。新建 `props` 相关的组件和页面并配置路由和菜单。
+
+可以看到这一个界面
+![Hello Props](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/4wc0MB-20-21-6p9ZUW.png)
+
+细心的你肯定已经观察到了，我们每次写 `hello xxx`都要重写一遍，而这显然是可以复用的，我们只需要改变 `xxx` 的值就可以。那么接下来就来使用 `Props` 重构之前的代码。
+1. 在 `components` 下新建 `Hello` 组件。
+
+    ```ts
+    import React from 'react';
+
+    type Props = {
+        hello: string;
+    }
+
+    export default class Hello extends React.Component<Props, {}> {
+    
+
+        render() {
+            return(
+                <div>
+                    Hello { this.props.hello }
+                </div>
+            )
+        }
+    }
+    ```
+2. 在 `pages` 里引用 `Hello`组件。
+    ```ts
+    import React from 'react';
+    import Props from '@/components/Props';
+    import Hello from '@/components/Hello';
+
+    const PropsLearning = () => {
+        return (
+            <div>
+                <Props />
+                <Hello
+                    hello="Props"
+                />
+            </div>
+        )
+    };
+
+    export default PropsLearning;
+    ```
+
+    其中: hello是自定义字段，对应着我们 `Hello` 组件中的 `this.props.hello` 我们只需要传入 `hello='xxx'`即可让页面现实不同的欢迎语言，相比于之前的写法，效果是完全一样的。目前在 `learning/props` 下你应该可以看到这样的界面。
+    ![Hello Props2](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/uBL7gZ-20-44-CfPV5Z.png)
+
+3. 好了，相信你对 `props` 有了一个大致的概念和用法的了解，现在就让我们把 `JsxLearning  Component `  的 **`'pages'`**页面修改为 `Hello` 组件+ `props` 吧。(由于 `Render` 组件较为特殊，我们先不对它进行改动)。
+
+4. 值得注意的是，使用 `props` 进行组件间的数据传输时，数据的流向只能是父组件流向子组件，同时子组件也不能改变 `props` 的值，这很好理解，这就相当于子组件向父组件临时借了一辆车开，你只能使用这辆车，而不能改装这辆车。
+
