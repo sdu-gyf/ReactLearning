@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-14 20:51:45
+ * @LastEditTime: 2021-01-14 21:41:27
  * @LastEditTime: 2021-01-13 20:55:54
 -->
 ## React 学习前置知识
@@ -550,3 +550,118 @@ export default MyComponent;
 
 4. 值得注意的是，使用 `props` 进行组件间的数据传输时，数据的流向只能是父组件流向子组件，同时子组件也不能改变 `props` 的值，这很好理解，这就相当于子组件向父组件临时借了一辆车开，你只能使用这辆车，而不能改装这辆车。
 
+### state
+
+1. 首先我们创建一个 `state` 组件如下:
+    ```ts
+    import React from 'react';
+    import Hello from '@/components/Hello';
+
+    export default class State extends React.Component {
+        render() {
+            return (
+                <div>
+                    <Hello hello="State"/>
+                </div>
+            )
+        }
+    }
+    ```
+    然后配置对应的 `pages` 路由和菜单。完成之后你的界面应该是这样的
+    ![state学习](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/QJ7hCz-21-00-cqjl3S.png)
+2. 什么是state, state就是页面中的状态，以前我们操作页面元素的变化都是修改DOM，操作DOM，但是有了 `React` 这种优秀的框架，我们不再推荐操作DOM，页面元素的改变使用 `state` 进行处理。我们在 `state` 组件中进行操作演示。
+
+    ```ts
+    import React from 'react';
+    import Hello from '@/components/Hello';
+
+    type IState = {
+        count: number;
+    }
+
+    export default class State extends React.Component<{}, IState> {
+        
+
+        constructor(props) {
+            super(props);
+            // 定义状态
+            this.state = {
+                count: 10
+            }
+        }
+
+        render() {
+            return (
+                <div>
+                    <Hello hello="State"/>
+                    <p> { this.state.count } </p>
+                </div>
+            )
+        }
+    }
+    ```
+    ![State](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/INHrZk-21-15-TidgiR.png)
+    看到这个界面就表示页面能拿到 state 。那我们拿到了 state 之后就可以对数据进行操作，最典型的，增加或者减少，我们可以定义两个 `button` 来对它进行操作。
+3. 定义 `increment decrement reset` 三个函数
+    ```ts
+    import { Button } from '@alifd/next'
+    // 老的写法，需要bind(this)
+    increment() {
+        // setState
+        this.setState({
+            count: this.state.count+1
+        })
+    }
+
+    decrement() {
+        // setState
+        this.setState({
+            count: this.state.count-1
+        })
+    }
+    // 尖头函数，不需要bind(this)
+    reset=()=> {
+        // setState
+        this.setState({
+            count: 10
+        })
+    }
+    ```
+    对应 `Button`，使用 `fusion` 写，上面已经导入了。
+    ```html
+
+
+    <Button type="primary" onClick={ this.increment.bind(this) }>增加</Button>
+    <br/><br/>
+    <Button type="primary" onClick={ this.decrement.bind(this) }>减小</Button>
+    <br/><br/>
+    <Button type="primary" onClick={ this.reset }>reset</Button>
+    ```
+    值得一提的是.bind(this)的应用，在函数里我已经写了注释了，注意用法。
+4. state 其实有好多使用场景，这里再介绍一种场景，即根据情况不同页面现实不同的文本。
+
+    ```ts
+    handleClick() {
+            if(this.state.flag) {
+                this.setState({
+                    flag: false,
+                })
+            } else {
+                this.setState({
+                    flag: true
+                })
+            }
+        }
+
+        render() {
+            let showView = this.state.flag? 'flag为真' : 'flag为假'
+            return (
+                <div>
+                    <p> { showView } </p>
+                    <Button type="primary" onClick={ this.handleClick.bind(this) }>改变flag</Button>
+                </div>
+            )
+        }
+    ```
+    此时的页面效果如下，点击 `button` 就可以改变文本
+    ![Flag改变](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/kiiEFP-21-40-jFaOk1.png)
