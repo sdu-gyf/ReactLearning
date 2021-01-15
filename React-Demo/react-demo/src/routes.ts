@@ -13,6 +13,7 @@ import ComponentLearning from '@/pages/Learning/Component';
 import PropsLearning from '@/pages/Learning/Props';
 import StateLearning from '@/pages/Learning/State';
 import LifeLearning from '@/pages/Learning/Life';
+import ConditionalLearing from '@/pages/Learning/ConditionalRendering'
 
 const routerConfig = [
   {
@@ -53,6 +54,11 @@ const routerConfig = [
         path: '/life',
         exact: true,
         component: LifeLearning,
+      },
+      {
+        path: '/conditional-rendering',
+        exact: true,
+        component: ConditionalLearing,
       },
     ]
   },

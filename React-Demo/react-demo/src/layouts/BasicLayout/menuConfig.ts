@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-14 22:04:06
+ * @LastEditTime: 2021-01-15 16:31:36
  */
 
 const AsideMenuConfig = [
@@ -35,6 +35,10 @@ const AsideMenuConfig = [
             {
                 name: 'Life学习',
                 path: '/learning/life'
+            },
+            {
+                name: '条件渲染学习',
+                path: '/learning/conditional-rendering'
             }
         ],
     },
