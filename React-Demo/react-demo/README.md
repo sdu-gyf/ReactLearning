@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 20:11:55
+ * @LastEditTime: 2021-01-15 20:24:20
 -->
 ## React 学习前置知识
 
@@ -1379,3 +1379,12 @@ onChangeHandler2=(e)=> {
 ![两个受控组件](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/EEXFtL-20-03-OkMRYL.png)
 
 那如果我们有很多很多的 `input` 框怎么办？我们得实现每一个 `input` 的 `onChange` 事件才能拿到我们想要的值，那这样用起来就不是很方便，因为你需要为数据变化的每种方式都编写事件处理函数，并通过一个 `React` 组件传递所有的输入 `state` 。这时候 `React` 为我们提供了非受控组件
+
+### Refs and the DOM
+
+在典型的 `React` 数据流中, `props` 是父组件和子组件交互的唯一方式，但是某些情况下，你需要强制修改子组件，被修改的子组件可能是一个 `React` 组件的实例，也可能是一个 `DOM` 元素，这时候就用到了 `Refs`。
+
+何时使用 `Refs`：
+- 管理焦点，文本选择或者媒体播放。
+- 触发强制动画。
+- 集成第三方 DOM 库
