@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 16:17:25
+ * @LastEditTime: 2021-01-15 16:58:12
 -->
 ## React 学习前置知识
 
@@ -1085,3 +1085,132 @@ const LifeLearning = () => {
 
 ![Unmount](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/Pxhtw6-23-22-1hJRqO.png)
 
+### 条件渲染
+
+在 `React` 中，你可以创建不同的组件封装各种你需要的行为，然后根据应用的不同状态，你可以只渲染对应状态下的部分内容， `React` 中的条件渲染和 `Javascript` 中的一样，使用 `Javascript` 运算符 `if` 或者条件运算符去创建元素来表现当前的状态，然后让 `React` 根据他们来更新 UI。
+
+条件渲染常用的应用场景有两个：
+1. 对视图条件进行切换
+2. 做缺省值
+
+简单举个例子，对视图条件进行切换最简单对例子就是一个网站登陆前后的变化，登陆前显示请登录，登陆后显示用户头像等信息。
+
+```ts
+interface Istate {
+    isLogin: boolean;
+}
+
+export default class ConditionalRendering extends React.Component<{}, Istate> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLogin: false
+        }
+    }
+
+    clickHandler = () => {
+        this.setState({ isLogin: !this.state.isLogin});
+    }
+
+    render() {
+
+        let showView = this.state.isLogin ?
+        <div>欢迎回来，sdu-gyf</div> :
+        <div>请登录</div>
+
+        return (
+            <div>
+                <Hello hello='conditional rendering' />
+                <div>条件渲染示例：{ showView }</div>
+                <Button type="primary" onClick={ this.clickHandler }>切换登陆状态</Button>
+            </div>
+        )
+    }
+}
+```
+
+这时候我们通过点击切换登录状态按钮就可以改变页面元素的显示，当然实际的使用过程中要根据服务器返回值去改变。
+
+![切换登陆状态](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/bMn2xP-16-42-R9QthT.png)
+
+关于缺省值的问题：我们大部分数据都是来源于服务器，所以一开始有些数据是拿不到的，比如用户未登陆状态我们无法显示用户信息。
+
+比如我们定一个 `state` 叫 `names` 里面存放的是用户名，然后我们把它渲染出来
+```ts
+<div>
+    { names.map((element, index) => {
+        return <p key={index}>{ element }</p>
+    })}
+</div>
+```
+
+就是这样子
+
+![names](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/IP5qcG-16-49-JmsrcP.png)
+
+但是有一个问题就是，假如用户刚刚登陆，服务器正在处理数据，还没给你返回值，你该显示什么，理论上我们应该显示正在请求数据，让用户等待，我们来做个最暴力的判断。
+
+```ts
+interface Istate {
+    isLogin: boolean;
+    names: string[];
+}
+
+export default class ConditionalRendering extends React.Component<{}, Istate> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLogin: false,
+            names: [],
+        }
+    }
+
+    clickHandler = () => {
+        this.setState({ isLogin: !this.state.isLogin});
+    }
+    
+    handleClick=() => {
+        if (this.state.names.length === 0) {
+            this.setState({
+                names: ['sdu', 'gyf']
+            });
+        } else {
+            this.setState({
+                names: []
+            });
+        };
+    };
+
+    render() {
+
+        const { names } = this.state;
+
+        let showView = this.state.isLogin ?
+        <div>欢迎回来，sdu-gyf</div> :
+        <div>请登录</div>
+
+        return (
+            <div>
+                <Hello hello='conditional rendering' />
+                <div>条件渲染示例：{ showView }</div>
+                <Button type="primary" onClick={ this.clickHandler }>切换登陆状态</Button>
+                {
+                    names.length > 0 ?
+                        <div>
+                            { names.map((element, index) => {
+                                return <p key={index}>{ element }</p>
+                            })}
+                        </div>
+                        :
+                        <p>正在请求数据，请稍后</p>
+                }
+                <Button onClick = { this.handleClick }> names数据 { names.length >0 ? '清空': '填充'} </Button>
+            </div>
+        )
+    }
+}
+```
+
+这样一来我们就完成了一个最简单的缺省值处理
