@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 16:31:36
+ * @LastEditTime: 2021-01-15 18:39:56
  */
 
 const AsideMenuConfig = [
@@ -39,6 +39,10 @@ const AsideMenuConfig = [
             {
                 name: '条件渲染学习',
                 path: '/learning/conditional-rendering'
+            },
+            {
+                name: '列表和key',
+                path: '/learning/listandkey'
             }
         ],
     },
