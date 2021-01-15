@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 18:39:56
+ * @LastEditTime: 2021-01-15 19:35:57
  */
 
 const AsideMenuConfig = [
@@ -43,6 +43,10 @@ const AsideMenuConfig = [
             {
                 name: '列表和key',
                 path: '/learning/listandkey'
+            },
+            {
+                name: '受控表单',
+                path: '/learning/form'
             }
         ],
     },

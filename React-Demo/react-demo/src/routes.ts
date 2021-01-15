@@ -3,7 +3,7 @@
  * @version: 
  * @Date: 2021-01-12 21:22:08
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 18:38:58
+ * @LastEditTime: 2021-01-15 19:36:12
  */
 import Home from '@/pages/Home';
 import BasicLayout from '@/layouts/BasicLayout';
@@ -15,6 +15,7 @@ import StateLearning from '@/pages/Learning/State';
 import LifeLearning from '@/pages/Learning/Life';
 import ConditionalLearing from '@/pages/Learning/ConditionalRendering'
 import KeyLearning from './pages/Learning/Key';
+import FormLearning from './pages/Learning/Form';
 
 const routerConfig = [
   {
@@ -65,6 +66,11 @@ const routerConfig = [
         path: '/listandkey',
         exact: true,
         component: KeyLearning,
+      },
+      {
+        path: '/form',
+        exact: true,
+        component: FormLearning,
       },
     ]
   },

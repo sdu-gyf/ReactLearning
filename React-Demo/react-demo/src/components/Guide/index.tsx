@@ -23,8 +23,16 @@ const Guide = () => {
           href="https://github.com/ice-lab/icejs"
           target="_blank"
           rel="noopener noreferrer"
+          style={{
+            marginRight: 20,
+          }}
         >
           GitHub
+        </a>
+        <a
+          href="http://192.168.1.127:3333/#/learning/Jsx"
+        >
+          学习
         </a>
       </div>
     </div>
