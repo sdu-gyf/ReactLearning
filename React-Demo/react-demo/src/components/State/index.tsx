@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-14 20:56:11
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-14 21:39:53
+ * @LastEditTime: 2021-01-15 16:17:13
  */
 import React from 'react';
 import Hello from '@/components/Hello';
@@ -61,6 +61,21 @@ export default class State extends React.Component<{}, IState> {
         }
     }
 
+    sync=()=>{
+        this.setState({
+            count: this.state.count+1
+        });
+        console.log(this.state.count);
+    }
+
+    async1=()=>{
+        this.setState({
+            count: this.state.count+1
+        }, () => {
+            console.log(this.state.count);
+        });
+    }
+
     render() {
         let showView = this.state.flag? 'flag为真' : 'flag为假'
         return (
@@ -74,6 +89,12 @@ export default class State extends React.Component<{}, IState> {
                 <Button type="primary" onClick={ this.reset }>reset</Button>
                 <p> { showView } </p>
                 <Button type="primary" onClick={ this.handleClick.bind(this) }>改变flag</Button>
+                <br/><br/>
+                <p> setState 是同步还是异步问题 </p>
+                <p> { this.state.count } </p>
+                <Button type="primary" onClick={ this.sync }>同步执行</Button>
+                <br/><br/>
+                <Button type="primary" onClick={ this.async1 }>异步执行</Button>
             </div>
         )
     }
