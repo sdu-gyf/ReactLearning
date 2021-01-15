@@ -5,7 +5,6 @@
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
  * @LastEditTime: 2021-01-15 16:17:25
- * @LastEditTime: 2021-01-13 20:55:54
 -->
 ## React 学习前置知识
 
@@ -33,6 +32,8 @@
 > [飞冰官方教程](https://ice.work/docs/guide/gui-start)
 
 这里我使用飞冰官方文档中的`使用 CLI 创建应用`
+
+0. 飞冰建议使用 `functional component` 而不是 `class component`， 但是为了前期便于理解一些东西，我还是会使用 `class component` ,如果你现在还不理解两者的区别，可以先照着此教程学习，后面会慢慢明白的。
 
 1. 由于这个项目是学习用，所以我们不使用模板。
 
@@ -666,6 +667,7 @@ export default MyComponent;
     此时的页面效果如下，点击 `button` 就可以改变文本
     ![Flag改变](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/kiiEFP-21-40-jFaOk1.png)
 
+
 5. setState 的同步异步问题，官网对这个问题的描述比较暧昧，官方说在不同情况下会有不同的状态，在可控的情况下是异步，在非可控的情况下是同步。这里先大体有个概念。我们还是以代码为例。
 ```ts
 sync=()=>{
@@ -703,3 +705,383 @@ async1=()=>{
 ![Async](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/JoXaMD-15-36-y7elJw.png)
 
 可能对刚开始学习的人来说这种写法很难受，那有没有什么办法能让异步写法变成同步写法呢？通过 `Promise` 语法糖就可以这个后面会讲到，这里就先不提了。
+
+### **React 生命周期函数** 
+生命周期非常非常非常重要，前期不要求理解，后面可以慢慢理解，但是一定要记住
+
+函数列表:
+- componentWillMount: 在组件渲染之前执行
+- componentDidMount: 在组件渲染之后执行
+- shouldComponentUpdate: 返回boolen,true代表允许改变，false代表不允许改变
+- componentWillUpdate: 数据在改变之前执行(state, props)
+- componentDidUpdate: 数据修改完成(state, props)
+- componentWillReveiceProps: props发生改变执行
+- componentWillUnmount: 组件卸载前执行
+
+如果你觉得太抽象，可以看下图，下面的代码结合这张图会更好理解
+
+![执行顺序](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/vnpnwY-23-18-OBZLXF.png)
+
+强调下，由于 `React` 版本更新迭代，很多生命周期函数都改名/即将弃用，到时候代码会报 `warning`， 这里为了系统演示先这样写。
+
+这么说非常的抽象，我们以实际代码为例，建立 `Life` 相关组件 页面 路由 菜单设置。
+```ts
+import React from 'react';
+import Hello from '../Hello';
+import { Button } from '@alifd/next';
+
+type Istate = {
+    count: number;
+}
+
+export default class Life extends React.Component<{}, Istate> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            count: 10
+        }
+    }
+
+    componentWillMount() {
+        console.log('componentWillMount');
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount');
+    }
+
+    shouldComponentUpdate() {
+        console.log('shouldComponent');
+        return true;
+    }
+
+    componentWillUpdate() {
+        console.log('componentWillUpdate');
+    }
+
+    componentDidUpdate() {
+        console.log('componentDidUpdate');
+    }
+
+    componentWillReceiveProps() {
+        console.log('componentWillReceiveProps');
+    }
+
+    componentWillUnmount() {
+        console.log('componentWillUnmount');
+    }
+
+    changeHandle =()=> {
+        this.setState({
+            count: this.state.count+1
+        })
+    }
+
+    render() {
+        const { count } = this.state;
+        return (
+            <div>
+                <Hello hello='Life' />
+                <div> count: { count }</div>
+                <Button type="primary" onClick={ this.changeHandle }>修改</Button>
+            </div>
+        ) 
+    }
+}
+```
+看到这个页面表示成功
+![Life 学习](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/gTGsDl-22-37-bfGd3T.png)
+
+我们打开开发者工具进入 `console` 中，刷新页面查看打印值：
+![Will Did Mount](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/wHgf2F-22-38-RJEWjQ.png)
+
+可以看到 `componentWillMount componentDidMount` 先后被调用，我们尝试更改 `state`， 点击修改按钮。
+![修改按钮](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/zB1Bdp-22-39-0MA8xf.png)
+可以看到 `shouldComponent componentWillUpdate componentDidUpdate` 先后被调用。并且 count 变为11。如果我们把 `shouldComponent` 的返回值改为 `false`。
+![should](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/LyZ88F-22-44-Q3I9hy.png)
+可以看到只执行了 `shouldComponent` 并且 count的值不发生变化。
+
+接下来我们来做 `props` 相关操作看下生命周期函数调用情况，由于 `props` 需要在父子组件间传递，我们需要构造出这样的环境，聪明的你肯定已经想到了 `pages` 是 `component` 的父组件，那么我们就在 `pages/learning/Life/index.tsx` 下文章，这里我使用了飞冰推荐的 `functional component` 和 `hooks` 来实现，如果现在看不懂没有关系，以后会慢慢讲解的。
+
+```ts
+import Life from '@/components/Life';
+import React, { useState } from 'react';
+import { Button } from '@alifd/next';
+
+const LifeLearning = () => {
+
+    const [title, setTitle] = useState('title 1');
+
+    function changeHandle() {
+        if (title === 'title 1') {
+            setTitle('title 2');
+        } else {
+            setTitle('title 1')
+        }
+    }
+
+    return (
+        <div>
+            <Life title={title}/>
+            <Button type="primary" onClick={ changeHandle }>修改</Button>
+        </div>
+    )
+}
+
+export default LifeLearning;
+```
+
+同时对 `component/Life/index.tsx` 做出修改,尤其要注意 `shouldComponentUpdate` 一定要把返回值改回 `true` ，要不然是没有效果的
+```ts
+import React from 'react';
+import Hello from '../Hello';
+
+type Istate = {
+    count: number;
+}
+
+type Props = {
+    title: string;
+}
+
+export default class Life extends React.Component<Props, Istate> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            count: 10
+        }
+    }
+
+    componentWillMount() {
+        console.log('componentWillMount');
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount');
+    }
+
+    shouldComponentUpdate() {
+        console.log('shouldComponent');
+        return true;
+    }
+
+    componentWillUpdate() {
+        console.log('componentWillUpdate');
+    }
+
+    componentDidUpdate() {
+        console.log('componentDidUpdate');
+    }
+
+    componentWillReceiveProps() {
+        console.log('componentWillReceiveProps');
+    }
+
+    componentWillUnmount() {
+        console.log('componentWillUnmount');
+    }
+
+    changeHandle =()=> {
+        this.setState({
+            count: this.state.count+1
+        })
+    }
+
+    render() {
+        const { count } = this.state;
+        return (
+            <div>
+                <Hello hello='Life' />
+                <div> count: { count } - title: { this.props.title }</div>
+            </div>
+        ) 
+    }
+}
+```
+![Props 传递](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/Iokl5P-23-16-q8yNol.png)
+可以看到四个生命周期函数的执行顺序。
+
+另外，我们这是点击父组件的 `button` 来修改父节点的 `state`，从而使得传入子节点的 `props` 发生变化，那我们能不能在子节点中改变显示的文本呢？答案是可以的，你可能会问，不是前面说了子节点不能改变 `props` 吗？这里怎么又可以了？ 其实很简单啊，我们通过子节点的 `props` 调用父节点的函数，通过父节点本身的函数修改 `state` 不就可以了吗。我们来具体实现下。
+
+`components/Life/index.tsx` 如下
+```ts
+import { Button } from '@alifd/next';
+import React from 'react';
+import Hello from '../Hello';
+
+type Istate = {
+    count: number;
+}
+
+type Props = {
+    title: string;
+    handleChildClick();
+}
+
+export default class Life extends React.Component<Props, Istate> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            count: 10
+        }
+    }
+
+    componentWillMount() {
+        console.log('componentWillMount');
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount');
+    }
+
+    shouldComponentUpdate() {
+        console.log('shouldComponent');
+        return true;
+    }
+
+    componentWillUpdate() {
+        console.log('componentWillUpdate');
+    }
+
+    componentDidUpdate() {
+        console.log('componentDidUpdate');
+    }
+
+    componentWillReceiveProps() {
+        console.log('componentWillReceiveProps');
+    }
+
+    componentWillUnmount() {
+        console.log('componentWillUnmount');
+    }
+
+    changeHandle =()=> {
+        this.setState({
+            count: this.state.count+1
+        })
+    }
+
+    handleClick() {
+        this.props.handleChildClick();
+    }
+
+    render() {
+        const { count } = this.state;
+        return (
+            <div>
+                <Hello hello='Life' />
+                <div> count: { count } - title: { this.props.title }</div>
+                <Button type="primary" onClick={ this.handleClick.bind(this) }>通过子组件修改 title </Button>
+                <br/><br/>
+            </div>
+        ) 
+    }
+}
+```
+
+`pages/Life/index.tsx` 如下
+```ts
+import Life from '@/components/Life';
+import React, { useState } from 'react';
+import { Button } from '@alifd/next';
+
+const LifeLearning = () => {
+
+    const [title, setTitle] = useState('title 1');
+
+    function changeHandle() {
+        if (title === 'title 1') {
+            setTitle('title 2');
+        } else {
+            setTitle('title 1')
+        }
+    }
+
+    return (
+        <div>
+            <Life title={title} handleChildClick={ changeHandle }/>
+            <Button type="primary" onClick={ changeHandle }>修改</Button>
+        </div>
+    )
+}
+
+export default LifeLearning;
+```
+
+可能初学者会比较难看懂，我这里稍微解释下，通过子节点改变按钮绑定了 `handleClick` 事件, 然后执行这个方法会调用 `this.props.handleChildClick();` 这个 `handleChildClick` 父节点传入的 `changeHandle` 方法，从而调用 `setTitle` 方法。(这里其实稍微涉及到了点回调函数的内容，这里可以先不管。)
+
+我们看下效果，和在父组件中直接改变是等效的。
+![子节点改变](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/nUhsNb-23-43-9mXjd6.png)
+
+这样做有什么好处呢？通过这样我们就可以传值回去了，让我们对代码进行一些简单修改
+`components/Life/index.tsx` 如下
+```ts
+type Props = {
+    title: string;
+    handleChildClick(data: string);
+}
+
+export default class Life extends React.Component<Props, Istate> {
+    handleClick() {
+        this.props.handleChildClick("子组件的数据");
+    }
+
+    render() {
+        const { count } = this.state;
+        return (
+            <div>
+                <Hello hello='Life' />
+                <div> count: { count } - title: { this.props.title }</div>
+                <Button type="primary" onClick={ this.handleClick.bind(this) }>通过子组件修改 title </Button>
+                <br/><br/>
+            </div>
+        ) 
+    }
+}
+```
+
+`pages/Life/index.tsx` 如下
+```ts
+const LifeLearning = () => {
+
+    const [title, setTitle] = useState('title 1');
+
+    function changeHandle(data: string) {
+        if(!data) {
+            if (title === 'title 1') {
+                setTitle('title 2');
+            } else {
+                setTitle('title 1')
+            }
+        } else {
+            setTitle(data);
+        }
+    }
+
+    function changeOwnHandle() {
+        if (title === 'title 1') {
+            setTitle('title 2');
+        } else {
+            setTitle('title 1')
+        }
+    }
+
+    return (
+        <div>
+            <Life title={title} handleChildClick={ changeHandle }/>
+            <Button type="primary" onClick={ changeOwnHandle }>修改</Button>
+        </div>
+    )
+}
+```
+![效果图](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/ZU1YNA-23-53-VPufjk.png)
+
+完美！
+
+那么流程图最左边那条线和中间这条线我们都走完了，还剩下最右边的`componentWillUnmount` 那这个怎么实现呢，我们看他实现条件，要在组件取消挂载的时候才会调用，什么时候会取消挂载呢？非常简单，你点击下菜单跳转到其他界面就好啦！
+
+![Unmount](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/Pxhtw6-23-22-1hJRqO.png)
+

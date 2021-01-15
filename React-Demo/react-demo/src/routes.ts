@@ -3,7 +3,7 @@
  * @version: 
  * @Date: 2021-01-12 21:22:08
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-14 20:59:55
+ * @LastEditTime: 2021-01-14 22:03:49
  */
 import Home from '@/pages/Home';
 import BasicLayout from '@/layouts/BasicLayout';
@@ -11,7 +11,8 @@ import JsxLearning from '@/pages/Learning/JsxLearning';
 import RenderLearning from '@/pages/Learning/Render';
 import ComponentLearning from '@/pages/Learning/Component';
 import PropsLearning from '@/pages/Learning/Props';
-import StateLearning from './pages/Learning/State';
+import StateLearning from '@/pages/Learning/State';
+import LifeLearning from '@/pages/Learning/Life';
 
 const routerConfig = [
   {
@@ -47,6 +48,11 @@ const routerConfig = [
         path: '/state',
         exact: true,
         component: StateLearning,
+      },
+      {
+        path: '/life',
+        exact: true,
+        component: LifeLearning,
       },
     ]
   },
