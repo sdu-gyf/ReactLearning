@@ -3,7 +3,7 @@
  * @version: 
  * @Date: 2021-01-12 21:22:08
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-14 22:03:49
+ * @LastEditTime: 2021-01-15 18:38:58
  */
 import Home from '@/pages/Home';
 import BasicLayout from '@/layouts/BasicLayout';
@@ -14,6 +14,7 @@ import PropsLearning from '@/pages/Learning/Props';
 import StateLearning from '@/pages/Learning/State';
 import LifeLearning from '@/pages/Learning/Life';
 import ConditionalLearing from '@/pages/Learning/ConditionalRendering'
+import KeyLearning from './pages/Learning/Key';
 
 const routerConfig = [
   {
@@ -59,6 +60,11 @@ const routerConfig = [
         path: '/conditional-rendering',
         exact: true,
         component: ConditionalLearing,
+      },
+      {
+        path: '/listandkey',
+        exact: true,
+        component: KeyLearning,
       },
     ]
   },

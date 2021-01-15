@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 16:58:12
+ * @LastEditTime: 2021-01-15 19:23:46
 -->
 ## React 学习前置知识
 
@@ -1214,3 +1214,101 @@ export default class ConditionalRendering extends React.Component<{}, Istate> {
 ```
 
 这样一来我们就完成了一个最简单的缺省值处理
+
+### 列表和 key
+这里主要是说一下遍历渲染以及 `key` 的问题，关于遍历渲染其实上一讲已经写过了，这里主要是再来解释下一些细节的东西。
+```ts
+import React from 'react';
+
+interface Istate {
+    userInfo:{
+        name: string,
+        age: number,
+        school: string,
+        hobbies: string[],
+    }[]
+}
+
+export default class ListAndKey extends React.Component<{}, Istate> {
+
+    constructor(state: Istate) {
+        super(state);
+        this.state = {
+            userInfo: [{
+                name:'gyf',
+                age:20,
+                school: '山东大学',
+                hobbies: ['bingbing', '摸鱼'],
+            },
+            {
+                name:'bingbing',
+                age:30,
+                school: '吉林大学',
+                hobbies: ['gyf','大胖头鱼'],
+            }]
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                列表渲染：
+                <div>
+                    <ul>
+                        { this.state.userInfo.map((element, index) => {
+                            return (<li key={index}>
+                                        <span>姓名:{ element.name }</span>
+                                        <br/>
+                                        <span>年龄:{ element.age }</span>
+                                        <br/>
+                                        <span>学校:{ element.school }</span>
+                                        <br/>
+                                        <div>
+                                            <span>爱好:</span>
+                                            { element.hobbies.map((ele, ind) => {
+                                                return (<span key={ind}>
+                                                            <span>{ ele }</span>
+                                                            <br/>
+                                                        </span>)
+                                            })}
+                                        </div>
+                                    </li>)
+                        })}
+                    </ul>
+                </div>
+            </div>
+        );
+    }
+}
+```
+
+这里简单说一下这个代码，这是做了双重遍历，具体效果如下
+
+![双重遍历](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/d2GfPQ-19-03-33yoCR.png)
+
+这里比较重要的两点解释下
+1. `map` 函数会出来两个参数 第二个参数是索引，我们在生成 `dom` 的时候需要在最外层传入这个 `index` ，也就是所谓的 `key={index}` ，这是做什么用的呢下面会做具体的介绍。
+2. 由于我们是循环套循环，我们内层的参数名一定不能和外层的参数名一样，比如都叫 `element index`。
+
+下面就来具体说下这个 `key={index}` 到底是干嘛用的。我们对代码进行简单修改，让他能添加一条数据：
+```ts
+
+clickHandler=()=>{
+    this.setState({
+        userInfo:this.state.userInfo.concat({
+            name:'Asuna',
+            age:20,
+            school: 'SAO幸存者学校',
+            hobbies: ['gyf', 'VRGames']
+        })
+    })
+}
+
+<Button type="primary" onClick={ this.clickHandler }>添加数据</Button>
+```
+
+同时我们打开开发者工具找到 `elements` 这一项。点击增加数据按钮，我们会惊奇的发现，只有新增加的数据被重新加载了，之前的数据并没有被重新渲染。
+
+![增加数据渲染](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/upxzSg-19-16-5Ypx89.png)
+
+那 `key` 的意义在哪呢, `setState` 会引起视图重绘，理论上所有的元素都会被重新加载，随着数据越来越多，渲染效率就会越来越低，`key` 的作用就体现出来了，之前的元素并没有发生变化，`key` 代表唯一索引，前面的索引并没有发生变化，只有添加了一个新的 `key` 。这样我们就可以节省渲染资源消耗。
