@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-14 21:41:27
+ * @LastEditTime: 2021-01-15 16:17:25
  * @LastEditTime: 2021-01-13 20:55:54
 -->
 ## React 学习前置知识
@@ -665,3 +665,41 @@ export default MyComponent;
     ```
     此时的页面效果如下，点击 `button` 就可以改变文本
     ![Flag改变](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-14/kiiEFP-21-40-jFaOk1.png)
+
+5. setState 的同步异步问题，官网对这个问题的描述比较暧昧，官方说在不同情况下会有不同的状态，在可控的情况下是异步，在非可控的情况下是同步。这里先大体有个概念。我们还是以代码为例。
+```ts
+sync=()=>{
+    this.setState({
+        count: this.state.count+1
+    });
+    console.log(this.state.count);
+}
+
+render() {
+    return (
+            <p> setState 是同步还是异步问题 </p>
+            <p> { this.state.count } </p>
+            <Button type="primary" onClick={ this.sync }>同步执行</Button>
+        </div>
+    )
+}
+```
+![sync](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/DXcVWI-15-32-1kPPAk.png)
+
+这显然是一个同步的执行结果，每次打印的 `count` 值都是上一次的值而不是改变之后的值，那有没有办法把同步过程改成异步过程呢，其实也很简单
+
+```ts
+async1=()=>{
+    this.setState({
+        count: this.state.count+1
+    }, () => {
+        console.log(this.state.count);
+    });
+}
+```
+
+我们直接写回调函数就可以，这时候我们看下效果：
+
+![Async](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/JoXaMD-15-36-y7elJw.png)
+
+可能对刚开始学习的人来说这种写法很难受，那有没有什么办法能让异步写法变成同步写法呢？通过 `Promise` 语法糖就可以这个后面会讲到，这里就先不提了。
