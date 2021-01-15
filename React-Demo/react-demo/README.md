@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 19:23:46
+ * @LastEditTime: 2021-01-15 20:11:55
 -->
 ## React 学习前置知识
 
@@ -1312,3 +1312,70 @@ clickHandler=()=>{
 ![增加数据渲染](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/upxzSg-19-16-5Ypx89.png)
 
 那 `key` 的意义在哪呢, `setState` 会引起视图重绘，理论上所有的元素都会被重新加载，随着数据越来越多，渲染效率就会越来越低，`key` 的作用就体现出来了，之前的元素并没有发生变化，`key` 代表唯一索引，前面的索引并没有发生变化，只有添加了一个新的 `key` 。这样我们就可以节省渲染资源消耗。
+
+### 受控表单
+
+关于表单主要是有受控表单和非受控表单两种，两者的区别会慢慢说明。我们先来讲受控组件。
+
+什么是受控组件，所谓的受控组件就是它的值是通过 `state` 进行管理的，我们可以在页面任意一个地方读取到这个 `state` 。
+
+我们举个最基本的例子。
+
+```ts
+import React from 'react';
+
+interface Istate {
+    value: string;
+}
+
+export default class FormDemo extends React.Component<{}, Istate> {
+
+    constructor(state) {
+        super(state);
+        this.state = {
+            value:''
+        }
+    }
+
+    handleSubmit=(e)=> {
+        e.preventDefault();
+        console.log(this.state.value);
+    }
+
+    onChangeHandler=(e)=> {
+        this.setState({
+            value: e.target.value
+        })
+    }
+    
+    render() {
+        return (
+            <div>
+                <form onSubmit={ this.handleSubmit }>
+                    <input type="text" value={ this.state.value } onChange={ this.onChangeHandler }/>
+                    <input type="submit" value="提交"/>
+                </form>
+            </div>
+        )
+    }
+}
+```
+
+我们来看下具体效果：
+
+![受控组件](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/JTC0FR-20-00-dmXkhN.png)
+
+我们能够通过 `state` 拿到输入的值，这是一个值，那我们想拿两个值怎么办？我们还需要实现一个 `onChange` 方法 
+
+```ts
+onChangeHandler2=(e)=> {
+    this.setState({
+        value2: e.target.value
+    })
+}
+<input type="text" value={ this.state.value2 } onChange={ this.onChangeHandler2 }/>
+```
+
+![两个受控组件](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-15/EEXFtL-20-03-OkMRYL.png)
+
+那如果我们有很多很多的 `input` 框怎么办？我们得实现每一个 `input` 的 `onChange` 事件才能拿到我们想要的值，那这样用起来就不是很方便，因为你需要为数据变化的每种方式都编写事件处理函数，并通过一个 `React` 组件传递所有的输入 `state` 。这时候 `React` 为我们提供了非受控组件
