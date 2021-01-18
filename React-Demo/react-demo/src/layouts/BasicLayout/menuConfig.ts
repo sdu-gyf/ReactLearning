@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 13:23:52
+ * @LastEditTime: 2021-01-18 13:44:20
  */
 
 const AsideMenuConfig = [
@@ -51,6 +51,10 @@ const AsideMenuConfig = [
             {
                 name: 'Refs和DOM',
                 path: '/learning/refsanddom'
+            },
+            {
+                name: '非受控组件',
+                path: '/learning/uncontrolledcomponent'
             }
         ],
     },

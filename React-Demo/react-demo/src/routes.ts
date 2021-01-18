@@ -3,7 +3,7 @@
  * @version: 
  * @Date: 2021-01-12 21:22:08
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 13:22:39
+ * @LastEditTime: 2021-01-18 13:44:28
  */
 import Home from '@/pages/Home';
 import BasicLayout from '@/layouts/BasicLayout';
@@ -17,6 +17,7 @@ import ConditionalLearing from '@/pages/Learning/ConditionalRendering'
 import KeyLearning from '@/pages/Learning/Key';
 import FormLearning from '@/pages/Learning/Form';
 import RefsAndDOMLearning from '@/pages/Learning/RefsAndDOM';
+import UncontrolledComponentLearning from './pages/Learning/UncontrolledComponent';
 
 const routerConfig = [
   {
@@ -77,6 +78,11 @@ const routerConfig = [
         path: '/refsanddom',
         exact: true,
         component: RefsAndDOMLearning,
+      },
+      {
+        path: '/uncontrolledcomponent',
+        exact: true,
+        component: UncontrolledComponentLearning,
       },
     ]
   },
