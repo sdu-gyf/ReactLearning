@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 13:37:25
+ * @LastEditTime: 2021-01-18 13:59:31
 -->
 ## React 学习前置知识
 
@@ -1420,3 +1420,49 @@ export default class RefsAndDom extends React.Component {
 
 这就是一个最简单的通过 `Refs` 操作 `DOM` 的 `style` 样式。
 
+### 非受控组件
+非受控组件可以解决我们受控组件中每个 `onChange` 事件我们都需要手动实现的痛点，具体来看一个例子，在输入框比较少的情况下，我们可以这样写:
+```ts
+import React, { createRef } from 'react';
+import { Button } from '@alifd/next';
+
+export default class UncontrolledComponent extends React.Component {
+
+    private userName = createRef<HTMLInputElement>();
+
+    clickHandler=()=>{
+        if(this.userName.current) {
+            console.log(this.userName.current.value);
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <input type="text" ref={ this.userName }/>
+                <Button type="primary" onClick={ this.clickHandler }>获取信息</Button>
+            </div>
+        );
+    }
+}
+```
+
+![userName](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-18/2lHXDz-13-51-AVMrje.png)
+
+这种情况下使用受控组件也可以非常轻易的完成，但是如果我们不只有 `userName`， 还有密码，性别，年龄等等就会比较麻烦，那用非受控组件就可以在工作量很少的情况下完成拓展，这里只增加密码字段作为演示。
+
+
+```ts
+private password = createRef<HTMLInputElement>();
+clickHandler=()=>{
+        console.log(this.userName.current? this.userName.current.value: '无输入');
+        console.log(this.password.current? this.password.current.value: '无输入');
+    }
+<input type="text" ref={ this.password }/>
+```
+
+我们可以看到已经实现了这个效果。
+
+![userName&&password](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-18/pWjBGq-13-55-ssBikn.png)
+
+关于受控组件和非受控组件，推荐优先使用受控组件，因为它可以通过 `state` 对所有值进行管理，便于不同组件之间值的传递。
