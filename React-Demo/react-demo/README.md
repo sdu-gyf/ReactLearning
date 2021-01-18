@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 17:43:08
+ * @LastEditTime: 2021-01-18 20:14:08
 -->
 ## React 学习前置知识
 
@@ -204,6 +204,15 @@
 4. 安装 `Fusion`
 
     `yarn add build-plugin-fusion --save`
+
+    并在`build.json` 中作出如下修改：
+```json
+{
+  "plugins": [
+    ["build-plugin-fusion", {}]
+  ]
+}
+```
 5. 在 `src/` 下新建 `layouts/BasicLayout/` ,并新建 `index.tsx` 和 `menuConfig.ts` 文件。
 
 6. 编写 `menuConfig.ts` 文件
