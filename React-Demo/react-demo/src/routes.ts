@@ -3,7 +3,7 @@
  * @version: 
  * @Date: 2021-01-12 21:22:08
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 19:36:12
+ * @LastEditTime: 2021-01-18 13:22:39
  */
 import Home from '@/pages/Home';
 import BasicLayout from '@/layouts/BasicLayout';
@@ -14,8 +14,9 @@ import PropsLearning from '@/pages/Learning/Props';
 import StateLearning from '@/pages/Learning/State';
 import LifeLearning from '@/pages/Learning/Life';
 import ConditionalLearing from '@/pages/Learning/ConditionalRendering'
-import KeyLearning from './pages/Learning/Key';
-import FormLearning from './pages/Learning/Form';
+import KeyLearning from '@/pages/Learning/Key';
+import FormLearning from '@/pages/Learning/Form';
+import RefsAndDOMLearning from '@/pages/Learning/RefsAndDOM';
 
 const routerConfig = [
   {
@@ -71,6 +72,11 @@ const routerConfig = [
         path: '/form',
         exact: true,
         component: FormLearning,
+      },
+      {
+        path: '/refsanddom',
+        exact: true,
+        component: RefsAndDOMLearning,
       },
     ]
   },

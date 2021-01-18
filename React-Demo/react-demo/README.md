@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-15 20:24:20
+ * @LastEditTime: 2021-01-18 13:37:25
 -->
 ## React 学习前置知识
 
@@ -1388,3 +1388,35 @@ onChangeHandler2=(e)=> {
 - 管理焦点，文本选择或者媒体播放。
 - 触发强制动画。
 - 集成第三方 DOM 库
+
+先来看看怎么使用 `Refs` 操作 `DOM`：
+
+```ts
+import React from 'react';
+
+export default class RefsAndDom extends React.Component {
+
+    private HelloDiv = React.createRef<HTMLDivElement>();
+
+    componentDidMount() { 
+        console.log(this.HelloDiv.current);
+        if(this.HelloDiv.current) {
+            this.HelloDiv.current.style.color = 'red';
+        }
+    };
+
+    render() {
+        return (
+            <div ref={this.HelloDiv}>
+                test
+            </div>
+        );
+    };
+}
+```
+
+这时候我看到的效果应该是这样的
+![Refs](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-18/B8E30Z-13-35-VtsOZD.png)
+
+这就是一个最简单的通过 `Refs` 操作 `DOM` 的 `style` 样式。
+
