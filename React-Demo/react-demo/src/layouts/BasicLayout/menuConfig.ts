@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 13:44:20
+ * @LastEditTime: 2021-01-18 14:14:26
  */
 
 const AsideMenuConfig = [
@@ -55,6 +55,10 @@ const AsideMenuConfig = [
             {
                 name: '非受控组件',
                 path: '/learning/uncontrolledcomponent'
+            },
+            {
+                name: '状态提升',
+                path: '/learning/liftingstateup'
             }
         ],
     },

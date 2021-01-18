@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 13:59:31
+ * @LastEditTime: 2021-01-18 17:24:15
 -->
 ## React 学习前置知识
 
@@ -1466,3 +1466,58 @@ clickHandler=()=>{
 ![userName&&password](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-18/pWjBGq-13-55-ssBikn.png)
 
 关于受控组件和非受控组件，推荐优先使用受控组件，因为它可以通过 `state` 对所有值进行管理，便于不同组件之间值的传递。
+
+### 状态提升
+
+通常，多个组件需要反映相同的变化数据，这时候就需要将共享状态提升到最近的共同父组件中去。
+
+这一部分为了直观演示，我们在 `LiftingStateUp` 组件里面新建 `child1.tsx child2.tsx parent.tsx`。
+
+`child1.tsx 和 child2.tsx` 类似，`child1.tsx` 具体定义如下，`child2.tsx` 请自行修改:
+
+```ts
+import React from 'react';
+import Hello from '@/components/Hello';
+
+export default class Child1 extends React.Component {
+    render() {
+
+        return (
+            <div>
+                <Hello hello='child1' />
+            </div>
+        );
+    }
+}
+```
+
+`parent.tsx` 如下:
+
+```ts
+import React from 'react';
+import Hello from '@/components/Hello';
+import Child1 from '@/components/LiftingStateUp/child1';
+import Child2 from '@/components/LiftingStateUp/child2';
+
+
+export default class Parent extends React.Component {
+    render() {
+        return (
+            <div>
+                <Hello hello='parent' />
+                <Child1 />
+                <Child2 />
+            </div>
+        );
+    }
+}
+```
+
+我们的最终效果应该是这样的
+
+![状态提升](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-18/p77RV0-14-17-ZJlEOr.png)
+
+我们做一个简单的汇率计算器来解释下这部分内容，其实就是使用 `props` 同时对两个子组件进行传值，两个子组件收到输入值之后对值进行处理并显示。
+
+当然这里只是举个例子，实际上如果要做汇率换算，完全不需要两个组件，使用一个组件就可以做到，我们可以观察到两个子组件代码高度一致，那我们只需要把两者不同的部分使用 `props` 从父组件传入即可。
+
