@@ -3,7 +3,7 @@
  * @version: 
  * @Date: 2021-01-12 21:22:08
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 13:44:28
+ * @LastEditTime: 2021-01-18 14:14:05
  */
 import Home from '@/pages/Home';
 import BasicLayout from '@/layouts/BasicLayout';
@@ -18,6 +18,7 @@ import KeyLearning from '@/pages/Learning/Key';
 import FormLearning from '@/pages/Learning/Form';
 import RefsAndDOMLearning from '@/pages/Learning/RefsAndDOM';
 import UncontrolledComponentLearning from './pages/Learning/UncontrolledComponent';
+import LiftingStateUpLearning from './pages/Learning/LiftingStateUp';
 
 const routerConfig = [
   {
@@ -83,6 +84,11 @@ const routerConfig = [
         path: '/uncontrolledcomponent',
         exact: true,
         component: UncontrolledComponentLearning,
+      },
+      {
+        path: '/liftingstateup',
+        exact: true,
+        component: LiftingStateUpLearning,
       },
     ]
   },
