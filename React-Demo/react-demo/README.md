@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 17:24:15
+ * @LastEditTime: 2021-01-18 17:43:08
 -->
 ## React 学习前置知识
 
@@ -1521,3 +1521,55 @@ export default class Parent extends React.Component {
 
 当然这里只是举个例子，实际上如果要做汇率换算，完全不需要两个组件，使用一个组件就可以做到，我们可以观察到两个子组件代码高度一致，那我们只需要把两者不同的部分使用 `props` 从父组件传入即可。
 
+### 组件组合
+
+这个内容比较简单，最主要是在具体项目中体会一些基本用法，这里只通过简单示例介绍基本概念。
+
+这里直接用代码作示例
+
+```ts
+import React from 'react';
+import Hello from '@/components/Hello';
+import Compose from '@/components/Compose';
+
+const ComposeLearing =()=>{
+    return (
+        <div>
+            <Hello hello='组件组合' />
+            <Compose />
+        </div>
+    );
+}
+
+export default ComposeLearing;
+```
+
+在 `pages` 中，我们一直是这么写的，即通过自闭和标签+ `props`往子组件传值 ，就比如 `Hello` 组件就是通过 `props` 传入了组件组合这四个字，那我们能不能不这么写呢？我们在 `Compose` 组件换一种写法，不使用自闭和标签。
+
+```html
+<Compose>
+    我没有使用自闭和
+</Compose>
+```
+在`components`里面我们这样修改
+```ts
+import React from 'react';
+
+export default class Compose extends React.Component {
+    render() {
+        return (
+            <div>
+                { this.props.children? this.props.children : "外部没有传值进来"}
+            </div>
+        )
+    }
+
+```
+
+通过 `this.props.children` 我们就能读到父组件通过非自闭和标签传入的 `props`
+
+![props.children](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-18/u2GPcT-17-42-g83e9c.png)
+
+假如我们什么都没有传入，那么我们就会看到这样的界面
+
+![children===null](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-18/W0LehR-17-42-Sr6QlX.png)

@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-13 18:53:42
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 14:14:26
+ * @LastEditTime: 2021-01-18 17:33:11
  */
 
 const AsideMenuConfig = [
@@ -59,6 +59,10 @@ const AsideMenuConfig = [
             {
                 name: '状态提升',
                 path: '/learning/liftingstateup'
+            },
+            {
+                name: '组件组合',
+                path: '/learning/compose'
             }
         ],
     },
