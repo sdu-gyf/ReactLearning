@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-12 19:45:34
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 15:37:20
+ * @LastEditTime: 2021-01-18 17:24:15
 -->
 ## React 学习前置知识
 
@@ -1518,3 +1518,6 @@ export default class Parent extends React.Component {
 ![状态提升](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-18/p77RV0-14-17-ZJlEOr.png)
 
 我们做一个简单的汇率计算器来解释下这部分内容，其实就是使用 `props` 同时对两个子组件进行传值，两个子组件收到输入值之后对值进行处理并显示。
+
+当然这里只是举个例子，实际上如果要做汇率换算，完全不需要两个组件，使用一个组件就可以做到，我们可以观察到两个子组件代码高度一致，那我们只需要把两者不同的部分使用 `props` 从父组件传入即可。
+
