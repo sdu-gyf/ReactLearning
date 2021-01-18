@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-18 18:04:32
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 18:14:13
+ * @LastEditTime: 2021-01-18 18:20:36
 -->
 ## Simple
 
@@ -51,3 +51,9 @@ $ npm start  # visit http://localhost:3333
 ├── .gitignore
 └── [j,t]sconfig.json
 ```
+
+## 说明
+从这个部分开始，由于内容具有连续性，不再每个新的内容都新开一个 `branch`，全部内容都在 `icejs` 这个分支上，学习完成之后统合并到 `main` 分支
+
+### 飞冰学习
+## 
