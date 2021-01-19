@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "description": "使用 TypeScript，未使用任何 UI 库。",
   "dependencies": {
+    "@alifd/next": "^1.21.16",
     "@types/react": "^16.9.20",
     "@types/react-dom": "^16.9.5",
+    "build-plugin-fusion": "^0.1.11",
     "react": "^16.4.1",
     "react-dom": "^16.4.1"
   },
   "devDependencies": {
     "@iceworks/spec": "^1.0.0",
+    "build-plugin-fusion": "^0.1.11",
     "eslint": "^6.8.0",
     "ice.js": "^1.0.0",
     "stylelint": "^13.7.2"
