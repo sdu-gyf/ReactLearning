@@ -1,11 +1,4 @@
-<!--
- * @Description: 
- * @version: 
- * @Author: sdu-gyf
- * @Date: 2021-01-18 18:04:32
- * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-18 18:14:13
--->
+
 ## Simple
 
 > A TypeScript simple template
