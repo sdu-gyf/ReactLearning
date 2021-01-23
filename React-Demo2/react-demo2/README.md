@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-22 11:42:41
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-22 15:51:25
+ * @LastEditTime: 2021-01-23 15:50:47
 -->
 ## React进阶学习
 
@@ -284,3 +284,140 @@ export const init=(header, data) =>{
 yarn add react-router-dom --save-dev
 ```
 
+React Router 适用于小型网站，比如 React.js Training，也可以支持 Facebook 和 Twitter 这类大型网站。
+
+对于大型应用来说，一个首当其冲的问题就是所需加载的 JavaScript 的大小。程序应当只加载当前渲染页所需的 JavaScript。有些开发者将这种方式称之为“代码分拆” —— 将所有的代码分拆成多个小包，在用户浏览过程中按需加载。
+
+对于底层细节的修改不应该需要它上面每一层级都进行修改。举个例子，为一个照片浏览页添加一个路径不应该影响到首页加载的 JavaScript 的大小。也不能因为多个团队共用一个大型的路由配置文件而造成合并时的冲突。
+
+路由是个非常适于做代码分拆的地方：它的责任就是配置好每个 view。
+
+React Router 里的路径匹配以及组件加载都是异步完成的，不仅允许你延迟加载组件，并且可以延迟加载路由配置。在首次加载包中你只需要有一个路径定义，路由会自动解析剩下的路径。
+
+Route 可以定义 getChildRoutes，getIndexRoute 和 getComponents 这几个函数。它们都是异步执行，并且只有在需要时才被调用。我们将这种方式称之为 “逐渐匹配”。 React Router 会逐渐的匹配 URL 并只加载该 URL 对应页面所需的路径配置和组件。
+
+如果配合 webpack 这类的代码分拆工具使用的话，一个原本繁琐的构架就会变得更简洁明了。
+
+```js
+// App.js
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import Nav from './components/Nav'
+import Login from './pages/login'
+import NotFoundPage from './pages/404'
+
+const App=()=> {
+
+  return (
+    <div className="App">
+      <Router>
+        <Nav />
+        <Switch>
+          <Route path='/login' component= {Login}></Route>
+          <Route component= {NotFoundPage}></Route>
+        </Switch>
+      </Router>
+    </div>
+  );
+}
+
+export default App;
+```
+
+我们来实现登陆功能
+
+首先我们新建 `login.service.js`
+
+```js
+import {get} from '../utils/httpClient'
+
+async function login(username, password){
+    return await get('/system/login',{
+                userName:username,
+                password:password
+            })
+}
+
+export {login};
+```
+
+这里调用之前封装的 `axios` 来实现登陆接口
+
+```js
+import React, { useState } from 'react';
+import { Input, Space, Button } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { login } from '../../services/login.service';
+import {setHeader} from '../../utils/httpClient'
+
+const Login = () => {
+
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLogin, setIsLogin] = useState(false);
+
+    const handleUserNameChange = (e) => {
+        setUserName(e.target.value)
+    }
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+    }
+
+    async function handleLogin() {
+        const data = await login(userName, password).then(res => {
+            sessionStorage.setItem('accessToken', res.data.accessToken）;
+        })
+    }
+
+    return (
+        <div>
+            {
+                isLogin ?
+                    <div>您已登陆</div>
+                    :
+                    <Space direction="vertical">
+                        <Input size="mid" placeholder="large size" prefix={<UserOutlined />} onChange={handleUserNameChange} />
+                        <Input.Password placeholder="input password" onChange={handlePasswordChange} />
+                        <Button type='primary' onClick={handleLogin}>登陆</Button>
+                    </Space>
+            }
+        </div>
+    )
+}
+
+export default Login;
+```
+
+这里使用了一个缺省值，`isLogin` 判断是否登陆，进而给用户显示不同主页(后面会实现自动跳转)，这里值得注意的是`sessionStorage.setItem('accessToken', res.data.accessToken）;` 这里存储了 `accessToken` ,这是我们前端和后端交互的唯一凭证
+
+### 使用mobx存储返回数据
+
+首先我们配置 `mobx` 
+
+```bash
+yarn add mobx mobx-react @babel/plugin-proposal-decorators @babel/plugin-proposal-class-properties --save-dev
+```
+
+在`package.json` 中找到 `babel` 修改如下
+
+```json
+"babel": {
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ],
+    "presets": [
+      "react-app"
+    ]
+  }
+```
