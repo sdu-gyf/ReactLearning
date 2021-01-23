@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-22 11:57:38
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-22 15:21:51
+ * @LastEditTime: 2021-01-23 15:33:59
  */
 import axios from 'axios';
 import {BACKEND_URL} from './common'
@@ -34,13 +34,13 @@ instance.interceptors.request.use(config => {
     config.headers['accessToken'] = sessionStorage.getItem('accessToken') || ''
     hide = message.loading({content: 'Loading...', duration: 0});
     // 在这里：可以根据业务需求可以在发送请求之前做些什么:例如我这个是导出文件的接口，因为返回的是二进制流，所以需要设置请求响应类型为blob，就可以在此处设置。
-    if (config.url.includes('pur/contract/export')) {
-        config.headers['responseType'] = 'blob'
-    }
+    // if (config.url.includes('pur/contract/export')) {
+    //     config.headers['responseType'] = 'blob'
+    // }
     // 我这里是文件上传，发送的是二进制流，所以需要设置请求头的'Content-Type'
-    if (config.url.includes('pur/contract/upload')) {
-        config.headers['Content-Type'] = 'multipart/form-data'
-    }
+    // if (config.url.includes('pur/contract/upload')) {
+    //     config.headers['Content-Type'] = 'multipart/form-data'
+    // }
     return config
 }, error => {
     // 对请求错误做些什么
@@ -102,6 +102,9 @@ export const post = (url, data, config = {}) => {
     })
 }
 
-export const init=(header, data) =>{
-    axios.defaults.headers.common[header] = data;
+export const setHeader=(header, data) =>{
+    console.log(instance.defaults.headers)
+    instance.defaults.headers.common[header] = data;
+    instance.defaults.headers.get[header] = data;
+    instance.defaults.headers.post[header] = data;
 }
