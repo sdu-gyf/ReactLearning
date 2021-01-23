@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-22 11:57:38
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-22 12:33:14
+ * @LastEditTime: 2021-01-22 15:21:51
  */
 import axios from 'axios';
 import {BACKEND_URL} from './common'
@@ -50,7 +50,8 @@ instance.interceptors.request.use(config => {
 /** 添加响应拦截器  **/
 instance.interceptors.response.use(response => {
     hide()
-    if (response.success === true) {     // success: true是我与后台的约定，大家可以根据实际情况去做对应的判断
+    console.log(response)
+    if (response.data.success === true) {     // success: true是我与后台的约定，大家可以根据实际情况去做对应的判断
         return Promise.resolve(response.data)
     } else {
         message.error('响应超时')
@@ -99,4 +100,8 @@ export const post = (url, data, config = {}) => {
             reject(error)
         })
     })
+}
+
+export const init=(header, data) =>{
+    axios.defaults.headers.common[header] = data;
 }

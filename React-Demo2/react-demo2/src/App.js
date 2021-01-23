@@ -1,23 +1,27 @@
-import { Button } from 'antd';
-import {get} from './utils/httpClient'
-
-
-
+/*
+ * @Description: 
+ * @version: 
+ * @Author: sdu-gyf
+ * @Date: 2021-01-22 11:42:41
+ * @LastEditors: sdu-gyf
+ * @LastEditTime: 2021-01-22 16:11:24
+ */
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import Nav from './components/Nav'
+import Login from './pages/login'
+import NotFoundPage from './pages/404'
 
 const App=()=> {
 
-  function handleClick() {
-    // console.log('1')
-    get('/system/login?userName=test&password=test')
-    .then((res)=>{
-      console.log(res)
-    })
-  }
-
   return (
     <div className="App">
-      Hello
-      <Button type="primary" onClick={ handleClick }>你好</Button>
+      <Router>
+        <Nav />
+        <Switch>
+          <Route path='/login' component= {Login}></Route>
+          <Route component= {NotFoundPage}></Route>
+        </Switch>
+      </Router>
     </div>
   );
 }

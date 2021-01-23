@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-22 11:42:41
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-22 12:30:04
+ * @LastEditTime: 2021-01-22 15:51:25
 -->
 ## React进阶学习
 
@@ -197,3 +197,90 @@ export const post = (url, data, config = {}) => {
 ```
 
 这里的注释我写的都比较详细了，我们来看下实际应用
+
+```js
+import { Button } from 'antd';
+import {get} from './utils/httpClient'
+
+
+
+
+const App=()=> {
+
+  function handleClick() {
+    // console.log('1')
+    get('/system/login?userName=test&password=test')
+    .then((res)=>{
+      console.log(res)
+    })
+  }
+
+  return (
+    <div className="App">
+      Hello
+      <Button type="primary" onClick={ handleClick }>你好</Button>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+![IFTgT7-12-59-fzuTX2](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-22/IFTgT7-12-59-fzuTX2.png)
+
+我们的界面是这样的，点击按钮登陆，查看 http 请求：
+
+![mUSGxC-13-00-gqrJb9](https://gitee.com/stdgyf/upic/raw/master/uPic/2021-01-22/mUSGxC-13-00-gqrJb9.png)
+
+这里我使用了我之前一个项目写的后端，可以查看[这里](https://github.com/sdu-gyf/Logistics-order-management)
+
+另外这里涉及到跨域的问题，这里写一下我的解决方案：
+
+```bash
+yarn add http-proxy-middleware --save
+```
+
+然后在 `src` 下新建 `setupProxy.js` 的文件
+
+```js
+const proxy = require('http-proxy-middleware');
+module.exports = function(app) {
+  app.use(
+    '/api',
+    proxy.createProxyMiddleware({
+      target: 'http://127.0.0.1:8080/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api': ''
+      }
+    })
+  );
+};
+```
+
+另外再修改 `BACKEND_URL` 为 `http://127.0.0.1:3000/api`
+
+这样就实现了完美跨域。
+
+这样我们就拿到来用户的 `token`，由于之前的项目是验证 `header`里有没有`accsssToken`， 所以我们在拿到 `token` 之后需要把 `token` 设置到 `header` 里面。
+
+我们在 `httpClient.js` 添加一个方法
+
+```js
+export const init=(header, data) =>{
+    axios.defaults.headers.common[header] = data;
+}
+```
+
+我们就可以通过这种方式实现我们的需求。
+
+
+### 配置路由
+
+首先安装 `react-router-dom` 
+
+```bash
+yarn add react-router-dom --save-dev
+```
+
