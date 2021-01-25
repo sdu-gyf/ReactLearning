@@ -6,7 +6,7 @@
  * @LastEditors: sdu-gyf
  * @LastEditTime: 2021-01-23 15:50:47
 -->
-## React进阶学习
+## React学习
 
 ### 框架搭建 
 
@@ -421,3 +421,181 @@ yarn add mobx mobx-react @babel/plugin-proposal-decorators @babel/plugin-proposa
     ]
   }
 ```
+
+另外我们还需要在 `config-overrides.js`中修改
+
+```js
+const { override, fixBabelImports,addDecoratorsLegacy } = require('customize-cra');
+module.exports=override(
+    fixBabelImports('import', {
+        libraryName: 'antd',
+        libraryDictionary:'es',
+        style:'css',
+    }),
+    addDecoratorsLegacy()
+);
+```
+
+接下来我们就来一步一步存储返回的数据
+
+1. 首先我们新建一个`store`用于存储返回数据，新建`src/stores/user.store.js`
+
+```js
+import { observable } from 'mobx';
+
+class UserInfo {
+    @observable
+    userName = 'hahaha'
+
+    @observable
+    userCode = ''
+
+    @observable
+    accessToken = ''
+
+    @observable
+    avatarUrl = ''
+}
+
+
+export default UserInfo;
+```
+
+​	这里面的变量都需要使用`observable`修饰，之后导出这类，记得不要导出类的实例（当然如果你很清楚你在干什么的话也可以`new UserInfo()`导出，这个很灵活。）
+
+2. 有了存储的`store` ，我们还需要能修改这个`store`的手段，比如把数据存入`store`或者对`store`内的数据进行修改，我们把这样的业务逻辑统一存放到`service`里面，新建`src/services/login.service.js`
+
+```js
+import {get} from '../utils/httpClient'
+import UserStore from '../stores/user.store'
+import { action } from 'mobx';
+
+
+class UserService {
+    constructor() {
+        this.store = new UserStore();
+    }
+    
+    async login(username, password) {
+        return await get('/system/login',{
+            userName:username,
+            password:password
+        })
+    }
+
+    @action
+    saveUserInfo(data) {
+        this.store.userName = data.userName;
+        this.store.accessToken = data.accessToken;
+        this.store.avatarUrl = data.avatarUrl;
+        this.store.userCode = data.userCode;
+    }
+}
+
+export default UserService;
+```
+
+​	首先引入`store`，然后由于我们导出的是类而不是类的实例，所以我们需要在`constructor`中实例化这个`store`，然后由于是登陆的`service` ，所以我们首先实现一个登陆接口，`api`地址为`/system/login`，参数为`userName password` ，由于是`GET`方法，我们引入封装好的`get`请求进行编写。
+
+​	然后我们来看`saveUserInfo`这个方法，由于我们需要修改`store`里面的数据，所以我们需要使用`@action` 来修饰这个方法，然后我们就能像正常操作数据一样对数据进行读写。
+
+​	最后我们导出这个`UserService`这个类就可以了。
+
+3. 编写页面逻辑，为了能体现 `mobx`对数据管理的方便性，我们要写子父两个组件 `src/pages/login/index.js`和`src/pages/login/userInfo.js`
+
+首先我们写`index.js`
+
+```js
+import React, { useState } from 'react';
+import { Input, Space, Button } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import UserService from '../../services/login.service';
+import { Provider } from 'mobx-react'
+import UserInfo from './userInfo'
+
+const Login = () => {
+
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLogin, setIsLogin] = useState(false);
+    const [userService, setUserService] = useState(new UserService())
+
+    const handleUserNameChange = (e) => {
+        setUserName(e.target.value)
+    }
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+    }
+
+    async function handleLogin() {
+        await userService.login(userName, password).then(res => {
+            sessionStorage.setItem('accessToken', res.data.accessToken);
+            // console.log(res.data);
+            userService.saveUserInfo(res.data);
+        })
+        setIsLogin(true);
+    }
+
+
+    return (
+        <div>
+            {
+                isLogin ?
+                    <Provider store={userService.store}>
+                        <Space>
+                            <UserInfo />
+                        </Space>
+                    </Provider>
+
+                    :
+                    <Space direction="vertical">
+                        <Input size="mid" placeholder="large size" prefix={<UserOutlined />} onChange={handleUserNameChange} />
+                        <Input.Password placeholder="input password" onChange={handlePasswordChange} />
+                        <Button type='primary' onClick={handleLogin}>登陆</Button>
+                    </Space>
+
+            }
+        </div>
+    )
+}
+
+export default Login;
+```
+
+​	整个组件使用`hook`编写，比较简洁也比较简单，不做过多介绍，比较重要的一点是不要在`Login` 这个组件里面直接`const userService  = new UserService()`初始化实例，这样每次组件刷新的时候都会把`userService`初始化，从而让变动的数据重制，所以我使用了`state`对`userService`进行管理，当然你也可以在`Login`组件外面`new UserService()` 然后在里面调用，但是何必呢。
+
+​	这里重点说下`<Provider>`这个组件，这才是`mobx`传输数据的关键，通过使用它对子组件进行嵌套就能让里面的子组件都能拿到`store`的数据，子组件通过读取`this.props.xxx`就可以拿到`store`的数据。
+
+4. 接下来是`userInfo.js`
+
+```js
+import React from 'react';
+import { inject, observer } from 'mobx-react';
+
+@inject('store')
+@observer
+export default class UserInfo extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {}
+    }
+    render() {
+        let { store } = this.props;
+        return (
+            <div>
+                <div>您已登陆</div>
+                <p>UserName: {store.userName}</p>
+                <p>头像: {store.avatarUrl}</p>
+                <p>accessToken: {store.accessToken}</p>
+                <p>userCode: {store.userCode}</p>
+            </div>
+        )
+    }
+}
+```
+
+这里通过两个注解`@inject和@observer`就可以让数据显示并且实时刷新。
+
+5. 总结下数据流程：首先我们需要有一个容器存放数据，即`store`，然后我们需要能改动数据的方法，即`@action`修饰的函数，为了管理方便我们一般把它存放到同一个`service`里面。然后父组件通过`<Provider>`把`store`的数据传入子组件，子组件通过`this.props和@inject @observer`能拿到数据并显示，并且数据和父组件实时同步。
+
