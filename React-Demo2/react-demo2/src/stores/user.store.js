@@ -4,13 +4,13 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-23 15:47:28
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-23 15:59:54
+ * @LastEditTime: 2021-01-24 20:52:26
  */
 import { observable } from 'mobx';
 
 class UserInfo {
     @observable
-    userName = ''
+    userName = 'hahaha'
 
     @observable
     userCode = ''
@@ -22,6 +22,5 @@ class UserInfo {
     avatarUrl = ''
 }
 
-const userInfoStore = new UserInfo();
 
-export default userInfoStore;
+export default UserInfo;

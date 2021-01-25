@@ -4,7 +4,7 @@
  * @Author: sdu-gyf
  * @Date: 2021-01-22 11:42:41
  * @LastEditors: sdu-gyf
- * @LastEditTime: 2021-01-22 16:11:24
+ * @LastEditTime: 2021-01-24 19:37:49
  */
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import Nav from './components/Nav'
