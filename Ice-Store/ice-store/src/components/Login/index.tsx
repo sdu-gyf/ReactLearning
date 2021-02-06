@@ -22,6 +22,11 @@ const Login = ()=> {
         userDispatchers.getUserInfo(userName+'?'+password);
     }
 
+    const handleChange=(e)=>{
+        setPassword(e);
+        console.log(password);
+    }
+
     return (
         <div>
             {
@@ -30,7 +35,7 @@ const Login = ()=> {
                 :
                 <Box spacing={20}>
                     <Input placeholder="Medium" aria-label="Medium" aria-labelledby="J_InputMedium" onChange={e=>{setUsername(e)}}/>
-                    <Input.Password placeholder="please input password" onChange={e=>{setPassword(e)}} /><br /><br />
+                    <Input.Password placeholder="please input password" onChange={handleChange} /><br /><br />
                     <Button onClick={handleClick}>登陆</Button>
                 </Box>
             }
