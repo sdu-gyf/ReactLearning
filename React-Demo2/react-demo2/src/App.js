@@ -10,8 +10,14 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import Nav from './components/Nav'
 import Login from './pages/login'
 import NotFoundPage from './pages/404'
+import useSound from 'use-sound'
+import React, {useEffect} from 'react'
 
 const App=()=> {
+
+  // useEffect(()=>{
+  //   useSound("/dictvoice?audio=word&type=1")
+  // })
 
   return (
     <div className="App">

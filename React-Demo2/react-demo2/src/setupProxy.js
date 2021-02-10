@@ -11,7 +11,7 @@ module.exports = function(app) {
   app.use(
     '/api',
     proxy.createProxyMiddleware({
-      target: 'http://127.0.0.1:8080/',
+      target: 'https://dict.youdao.com/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': ''
